@@ -12,9 +12,14 @@ width:auto;
 height:auto;
 background-color:#ADE0EE;}
 .header {
-font-size:50px;}
+font-size:45px;}
 .centry {
 font-size:40px;}
+input {
+  width:10px;}
+button {
+  width:13px;
+  height:13px;}
 </style>
 <body>
 <script src="KEISAN.js"></script>
@@ -25,8 +30,9 @@ font-size:40px;}
 <p>ax²+bx+c=0</p>
 <input type="number" id="A" placeholder="a:">
 <input type="number" id="B" placeholder="b:">
-<input type="number" id="C" placeholder="c:">
+<input type="number" id="C" placeholder="c:"><br>
 <button onclick="keisan()">計算</button>
+<div id="result"></div>
 </div>
 </body>
 </html>
