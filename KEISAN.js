@@ -1,30 +1,52 @@
-function keisan(){
-    function x1(a,b,c){
-        return (-1*b+Math.sqrt(b**2-4*a*c))/(2*a);
+function keisan() {
+    function x1(a, b, c) {
+        return (-b + Math.sqrt(b ** 2 - 4 * a * c)) / (2 * a);
     }
-    function x2(a,b,c){
-        return (-1*b-Math.sqrt(b**2-4*a*c))/(2*a);
+    function x2(a, b, c) {
+        return (-b - Math.sqrt(b ** 2 - 4 * a * c)) / (2 * a);
     }
+
     const a = parseFloat(document.getElementById("A").value);
     const b = parseFloat(document.getElementById("B").value);
     const c = parseFloat(document.getElementById("C").value);
-    const D = b**2 - 4 * a * c;
-    const X = x1(a,b,c)
-    const Y = x2(a,b,c)
-    if (X>0) var y1 = "-";
-    else var y1 = " ";
-    if (Y>0) var y2 = "-";
-    else var y2 = " ";
-    if (D>0){
-        document.getElementById('result1').innerText = "x="+X+","+Y;
-        document.getElementById('result2').innerText = "(x"+y1+X+")(x"+y2+Y+")";
+    const result1 = document.getElementById("result1");
+    const result2 = document.getElementById("result2");
+
+    if (isNaN(a) || isNaN(b) || isNaN(c)) {
+        result1.innerText = "すべての値を入力してください。";
+        result2.innerText = "";
+        return;
     }
-    if (D==0){
-        document.getElementById('result1').innerText = "x="+X
-        document.getElementById('result2').innerText = "(x"+y1+X+")²";
+
+    if (a === 0) {
+        result1.innerText = "a ≠ 0 のときのみ解を求められます。";
+        result2.innerText = "";
+        return;
     }
-    if (D<0){
-        document.getElementById('result1').innerText = "実数解はありません";
-        document.getElementById('result2').innerText = " ";
+
+    const D = b ** 2 - 4 * a * c;
+
+    if (D > 0) {
+        const X = x1(a, b, c);
+        const Y = x2(a, b, c);
+        const x1str = X.toFixed(2);
+        const x2str = Y.toFixed(2);
+        const y1 = X >= 0 ? "-" : "+";
+        const y2 = Y >= 0 ? "-" : "+";
+
+        result1.innerText = `x = ${x1str}, ${x2str}`;
+        result2.innerText = `(x ${y1} ${Math.abs(x1str)})(x ${y2} ${Math.abs(x2str)})`;
+
+    } else if (D === 0) {
+        const X = x1(a, b, c);
+        const x1str = X.toFixed(2);
+        const y1 = X >= 0 ? "-" : "+";
+
+        result1.innerText = `x = ${x1str}`;
+        result2.innerText = `(x ${y1} ${Math.abs(x1str)})²`;
+
+    } else {
+        result1.innerText = "実数解はありません。";
+        result2.innerText = "";
     }
 }
