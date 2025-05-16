@@ -16,12 +16,12 @@ function keisan(){
     if (Y>0) var y2 = "-";
     else var y2 = "+";
     if (D>0){
-        document.getElementById("x1","x2").innerText = "x="+X+","+Y;
-        document.getElementById("x1","x2","y1","y2").innerText = "(x"+y1+X+")(x"+y2+Y+")";
+        document.getElementById("X","Y").innerText = "x="+X+","+Y;
+        document.getElementById("X","Y","y1","y2").innerText = "(x"+y1+X+")(x"+y2+Y+")";
     }
     if (D=0){
-        document.getElementById("x1").innerText = "x="+X
-        document.getElementById("x1","y1").innerText = "(x"+y1+X+")^2";
+        document.getElementById("X").innerText = "x="+X
+        document.getElementById("X","y1").innerText = "(x"+y1+X+")^2";
     }
     if (D<0){
         document.getElementById().innerText = "実数解はありません";
