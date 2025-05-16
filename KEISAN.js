@@ -25,5 +25,6 @@ function keisan(){
     }
     if (D<0){
         document.getElementById('result1').innerText = "実数解はありません";
+        document.getElementById('result2').innerText = "";
     }
 }
