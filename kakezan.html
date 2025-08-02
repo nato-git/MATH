@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <link rel="stylesheet" href="stylesheet.css" />
+    <meta charset="utf-8" />
+    <title>計算クイズ</title>
+  </head>
+  <body>
+    <style>
+      body {
+        width: auto;
+        height: auto;
+      }
+    </style>
+    <h1>計算クイズ</h1>
+    <br />
+    <p>どれか選んでね</p>
+    <div id="quiz">
+      <hr align="center" size="5px" width="auto" />
+      <div id="change_button"></div>
+    </div>
+    <script>
+      const quiz_button = `
+    <input type="button" onclick="plus" value="たしざん"><input type="button" onclick="minus" value="ひきざん"><br>
+    <input type="button" onclick="times" value="かけざん"><input type="button" onclick="divide" value="わりざん"><br>`;
+
+      function plus() {
+        for (let i = 0; i < 10; i++) {
+          let Number1 =
+            Math.floor(Math.random() * 100) * Math.floor(Math.random() * 100);
+          let Number2 =
+            Math.floor(Math.random() * 100) * Math.floor(Math.random() * 100);
+          document.getElementById(
+            'change_button'
+          ).innerHTML = `<p>${Number1} + ${Number2} = ?</p><input type="number" value="こたえ" id="answer"><br><input type="button" onclick="gouhi" value="こたえる"><br><p id="a"></p>`;
+          function gouhi() {
+            let answered = document.getElementById('answer').value;
+            if (Number1 + Number2 == answered) {
+              document.getElementById('a').innerText = 'せいかい！';
+            } else {
+              document.getElementById('a').innerText =
+                'ざんねん！せいかいは' + (Number1 + Number2) + 'です。';
+            }
+          }
+        }
+      }
+
+      function minus() {
+        for (let i = 0; i < 10; i++) {
+          let Number1 =
+            Math.floor(Math.random() * 100) * Math.floor(Math.random() * 100);
+          let Number2 =
+            Math.floor(Math.random() * 100) * Math.floor(Math.random() * 100);
+          if (Number1 < Number2) {
+            document.getElementById(
+              'change_button'
+            ).innerHTML = `<p>${i}問目</p><p>${Number2} - ${Number1} = ?</p><input type="number" value="こたえ" id="answer"><br><input type="button" onclick="gouhi" value="こたえる"><br><p id="a"></p>`;
+            function gouhi() {
+              let answered = document.getElementById('answer').value;
+              if (Number2 - Number1 == answered) {
+                document.getElementById('a').innerText = 'せいかい！';
+              } else {
+                document.getElementById('a').innerText =
+                  'ざんねん！せいかいは' + (Number2 - Number1) + 'です。';
+              }
+            }
+          }
+          if (Number1 >= Number2) {
+            document.getElementById(
+              'change_button'
+            ).innerHTML = `<p>${i}問目</p><p>${Number1} - ${Number2} = ?</p><input type="number" value="こたえ" id="answer"><br><input type="button" onclick="gouhi" value="こたえる"><br><p id="a"></p>`;
+            function gouhi() {
+              let answered = document.getElementById('answer').value;
+              if (Number1 - Number2 == answered) {
+                document.getElementById('a').innerText = 'せいかい！';
+              } else {
+                document.getElementById('a').innerText =
+                  'ざんねん！せいかいは' + (Number1 - Number2) + 'です。';
+              }
+            }
+          }
+        }
+      }
+
+      function times() {
+        document.getElementById(
+          'change_button'
+        ).innerHTML = `<p>段を選んでね</p>`;
+        for (let i = 1; i <= 9; i++) {
+          document.getElementById(
+            'change_button'
+          ).innerHTML += `<input type="button" onclick="gouhi(${i})" value="${i}の段"><br>`;
+        }
+        document.getElementById(
+          'change_button'
+        ).innerHTML += `<input type="button" onclick="randomTimes()" value="ランダムなかけざん"><br>`;
+        function gouhi(i) {
+          for (let j = 1; j <= 9; j++) {
+            let answer = i * j;
+            document.getElementById(
+              'change_button'
+            ).innerHTML += `<p>${i} * ${j} = ?</p><input type="number" value="こたえ" id="answer"><br><input type="button" value="こたえる"><br><p id="a"></p>`;
+            let answered = document.getElementById('answer').value;
+            if (answer == answered) {
+              document.getElementById('a').innerText = 'せいかい！';
+            } else {
+              document.getElementById('a').innerText =
+                'ざんねん！せいかいは' + answer + 'です。';
+            }
+          }
+        }
+        function randomTimes() {
+            let Number1 = Math.floor(Math.random() * 9 + 1);
+            let Number2 = Math.floor(Math.random() * 9 + 1);
+            document.getElementById(
+              'change_button'
+            ).innerHTML = `<p>${Number1} * ${Number2} = ?</p><input type="number" value="こたえ" id="answer"><br><input type="button" onclick="gouhi()" value="こたえる"><br><p id="a"></p>`;
+            function gouhi() {
+              let answered = document.getElementById('answer').value;
+              if (Number1 * Number2 == answered) {
+                document.getElementById('a').innerText = 'せいかい！';
+              } else {
+                document.getElementById('a').innerText =
+                  'ざんねん！せいかいは' + (Number1 * Number2) + 'です。';
+              }
+            }
+        }
+      }
+
+      function divide() {
+        document.getElementById(
+          'change_button'
+        ).innerHTML = `<p>段を選んでね</p>`;
+        for (let i = 1; i <= 9; i++) {
+          document.getElementById(
+            'change_button'
+          ).innerHTML += `<input type="button" onclick="gouhi(${i})" value="${i}の段"><br>`;
+        }
+        document.getElementById(
+          'change_button'
+        ).innerHTML += `<input type="button" onclick="randomDivide()" value="ランダムなわりざん"><br>`;
+        function gouhi(i) {
+          for (let j = 1; j <= 9; j++) {
+            let answer = i * j;
+            document.getElementById(
+              'change_button'
+            ).innerHTML += `<p>${answer} ÷ ${i} = ?</p><input type="number" value="こたえ" id="answer"><br><input type="button" value="こたえる"><br><p id="a"></p>`;
+            let answered = document.getElementById('answer').value;
+            if (j == answered) {
+              document.getElementById('a').innerText = 'せいかい！';
+            } else {
+              document.getElementById('a').innerText =
+                'ざんねん！せいかいは' + j + 'です。';
+            }
+          }
+        }
+        function randomDivide() {
+            let Number1 = Math.floor(Math.random() * 9 + 1);
+            let Number2 = Math.floor(Math.random() * 9 + 1);
+            let answer = Number1 * Number2;
+            document.getElementById(
+              'change_button'
+            ).innerHTML = `<p>${answer} ÷ ${Number1} = ?</p><input type="number" value="こたえ" id="answer"><br><input type="button" onclick="gouhi()" value="こたえる"><br><p id="a"></p>`;
+            function gouhi() {
+              let answered = document.getElementById('answer').value;
+              if (Number2 == answered) {
+                document.getElementById('a').innerText = 'せいかい！';
+              } else {
+                document.getElementById('a').innerText =
+                  'ざんねん！せいかいは' + Number2 + 'です。';
+              }
+            }
+        }
+    }
+
+      document.getElementById('change_button').innerHTML = quiz_button;
+    </script>
+  </body>
+</html>
