@@ -8,29 +8,44 @@
         width: auto;
         height: auto;
       }
+      .hidden {
+        display: none;
+      }
     </style>
   </head>
   <body>
     <h1>計算クイズ</h1>
     <br />
-    <p>どれか選んでね</p>
-    <div id="quiz">
-      <hr align="center" size="5px" width="auto" />
-      <div id="quiz-container">
-        <input type="button" onclick="startQuiz('plus')" value="たしざん">
-        <input type="button" onclick="startQuiz('minus')" value="ひきざん">
-        <br>
-        <input type="button" onclick="startQuiz('times')" value="かけざん">
-        <input type="button" onclick="startQuiz('divide')" value="わりざん">
-      </div>
+    <p id="instruction">どれか選んでね</p>
+
+    <div id="quiz-menu">
+      <input type="button" onclick="startQuiz('plus')" value="たしざん">
+      <input type="button" onclick="startQuiz('minus')" value="ひきざん">
+      <br>
+      <input type="button" onclick="startQuiz('times')" value="かけざん">
+      <input type="button" onclick="startQuiz('divide')" value="わりざん">
     </div>
+
+    <div id="quiz-container"></div>
 
     <script>
       let currentAnswer = 0;
+      let currentQuestionNumber = 0;
+
+      const quizMenu = document.getElementById('quiz-menu');
+      const quizContainer = document.getElementById('quiz-container');
+      const instruction = document.getElementById('instruction');
 
       function startQuiz(type) {
         let num1, num2, questionText;
-        const quizContainer = document.getElementById('quiz-container');
+
+        // 問題数をリセットして、メニューを非表示にする
+        if (currentQuestionNumber === 0) {
+          quizMenu.classList.add('hidden');
+        }
+        
+        instruction.classList.add('hidden'); // 「どれか選んでね」を非表示にする
+        currentQuestionNumber++;
 
         if (type === 'plus') {
           num1 = Math.floor(Math.random() * 100);
@@ -40,9 +55,8 @@
         } else if (type === 'minus') {
           num1 = Math.floor(Math.random() * 100);
           num2 = Math.floor(Math.random() * 100);
-          // 引き算でマイナスにならないようにする
           if (num1 < num2) {
-            [num1, num2] = [num2, num1]; // num1とnum2を入れ替える
+            [num1, num2] = [num2, num1];
           }
           questionText = `${num1} - ${num2} = ?`;
           currentAnswer = num1 - num2;
@@ -52,14 +66,16 @@
           questionText = `${num1} × ${num2} = ?`;
           currentAnswer = num1 * num2;
         } else if (type === 'divide') {
-          num2 = Math.floor(Math.random() * 9) + 1;
-          let tempResult = Math.floor(Math.random() * 9) + 1;
-          num1 = num2 * tempResult; // 割り切れるようにする
+          // 割り算を1〜10のランダムな数に限定
+          num2 = Math.floor(Math.random() * 10) + 1;
+          let tempResult = Math.floor(Math.random() * 10) + 1;
+          num1 = num2 * tempResult;
           questionText = `${num1} ÷ ${num2} = ?`;
           currentAnswer = tempResult;
         }
 
         quizContainer.innerHTML = `
+          <p>${currentQuestionNumber}問目</p>
           <p>${questionText}</p>
           <input type="number" id="user-answer">
           <br>
@@ -78,8 +94,19 @@
           resultParagraph.innerText = `ざんねん！せいかいは ${currentAnswer} です。`;
         }
 
-        // 次の問題を出すボタンを追加
-        resultParagraph.innerHTML += `<br><input type="button" onclick="startQuiz('${type}')" value="次の問題へ">`;
+        resultParagraph.innerHTML += `
+          <br>
+          <input type="button" onclick="startQuiz('${type}')" value="次の問題へ">
+          <input type="button" onclick="resetQuiz()" value="メニューに戻る">
+        `;
+      }
+
+      // クイズをリセットし、メニュー画面に戻る関数
+      function resetQuiz() {
+        currentQuestionNumber = 0; // 問題数をリセット
+        quizContainer.innerHTML = ''; // 問題表示をクリア
+        quizMenu.classList.remove('hidden'); // メニューを表示
+        instruction.classList.remove('hidden'); // 「どれか選んでね」を表示
       }
     </script>
   </body>
