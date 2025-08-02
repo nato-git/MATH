@@ -1,173 +1,175 @@
 <!DOCTYPE html>
 <html>
-  <head>
-    <meta charset="utf-8" />
-    <title>計算クイズ</title>
-    <style>
-      body {
-        width: auto;
-        height: auto;
-        font-size:20px;
-      }
-      .hidden {
-        display: none;
-      }
-      input[type="button"]{
-        background-color:#000FFF;
-        color:#FFFFFF;
-        width:150px;
-        height:30px;
-        border-radius:10px;
-        border:none;
-        margin:5px;
-      }
-      input[type="number"]{
-        background-color:#FFFFFF;
-        color:#000000;
-        width:150px;
-        height:30px;
-        border-radius:10px;
-        margin:5px;
-      }
-      .hint-line {
-        white-space: pre-wrap; /* 改行を有効にする */
-      }
-    </style>
-  </head>
-  <body>
-    <h1>計算クイズ</h1>
-    <br />
-    <p id="instruction">どれか選んでね</p>
+  <head>
+    <meta charset="utf-8" />
+    <title>計算クイズ</title>
+    <style>
+      body {
+        width: auto;
+        height: auto;
+        font-size: 20px;
+      }
+      .hidden {
+        display: none;
+      }
+      input[type="button"] {
+        background-color: #000FFF;
+        color: #FFFFFF;
+        width: 150px;
+        height: 30px;
+        border-radius: 10px;
+        border: none;
+        margin: 5px;
+        cursor: pointer;
+      }
+      input[type="number"] {
+        background-color: #FFFFFF;
+        color: #000000;
+        width: 150px;
+        height: 30px;
+        border-radius: 10px;
+        margin: 5px;
+      }
+      .hint-text {
+        font-size: 20px;
+        white-space: pre-wrap; /* 改行を有効にする */
+      }
+    </style>
+  </head>
+  <body>
+    <h1>計算クイズ</h1>
+    <br />
+    <p id="instruction">どれか選んでね</p>
 
-    <div id="quiz-menu">
-      <input type="button" onclick="startQuiz('plus')" value="たしざん">
-      <input type="button" onclick="startQuiz('minus')" value="ひきざん">
-      <br>
-      <input type="button" onclick="startQuiz('times')" value="かけざん">
-      <input type="button" onclick="startQuiz('divide')" value="わりざん">
-    </div>
+    <div id="quiz-menu">
+      <input type="button" onclick="startQuiz('plus')" value="たしざん">
+      <input type="button" onclick="startQuiz('minus')" value="ひきざん">
+      <br>
+      <input type="button" onclick="startQuiz('times')" value="かけざん">
+      <input type="button" onclick="startQuiz('divide')" value="わりざん">
+    </div>
 
-    <div id="quiz-container"></div>
+    <div id="quiz-container"></div>
 
-    <script>
-      let currentAnswer = 0;
-      let currentQuestionNumber = 0;
-      let quizType = '';
+    <script>
+      let currentAnswer = 0;
+      let currentQuestionNumber = 0;
+      let quizType = ''; // どのクイズかを保持する変数
 
-      const quizMenu = document.getElementById('quiz-menu');
-      const quizContainer = document.getElementById('quiz-container');
-      const instruction = document.getElementById('instruction');
+      const quizMenu = document.getElementById('quiz-menu');
+      const quizContainer = document.getElementById('quiz-container');
+      const instruction = document.getElementById('instruction');
 
-      function startQuiz(type) {
-        quizType = type;
+      function startQuiz(type) {
+        quizType = type; // クイズの種類を保存
+        instruction.classList.add('hidden');
+        quizMenu.classList.add('hidden');
+        currentQuestionNumber = 0; // 新しいクイズ開始時に問題数をリセット
 
-        instruction.classList.add('hidden');
-        quizMenu.classList.add('hidden');
-        currentQuestionNumber = 0;
+        if (type === 'times') {
+          showTimesMenu();
+        } else {
+          generateQuestion();
+        }
+      }
 
-        if (type === 'times') {
-          showTimesMenu();
-        } else {
-          generateQuestion();
-        }
-      }
+      function showTimesMenu() {
+        let buttons = '';
+        for (let i = 1; i <= 9; i++) {
+          buttons += `<input type="button" onclick="startTimesQuiz(${i})" value="${i}の段">`;
+        }
+        buttons += `<br><input type="button" onclick="startTimesQuiz('random')" value="ランダムなかけざん">`;
+        buttons += `<br><input type="button" onclick="resetQuiz()" value="メニューに戻る">`;
 
-      function showTimesMenu() {
-        let buttons = '';
-        for (let i = 1; i <= 9; i++) {
-          buttons += `<input type="button" onclick="startTimesQuiz(${i})" value="${i}の段">`;
-        }
-        buttons += `<br><input type="button" onclick="startTimesQuiz('random')" value="ランダムなかけざん">`;
-        buttons += `<br><input type="button" onclick="resetQuiz()" value="メニューに戻る">`;
-        
-        quizContainer.innerHTML = `<p>段を選んでね</p>${buttons}`;
-      }
+        quizContainer.innerHTML = `<p>段を選んでね</p>${buttons}`;
+      }
 
-      function startTimesQuiz(dan) {
-        quizType = `times_${dan}`;
-        generateQuestion();
-      }
+      function startTimesQuiz(dan) {
+        quizType = `times_${dan}`;
+        generateQuestion();
+      }
 
-      function generateQuestion() {
-        let num1, num2, questionText;
-        currentQuestionNumber++;
-        let hintText = ''; // 追加: ヒント用の変数を初期化
+      function generateQuestion() {
+        let num1, num2, questionText;
+        currentQuestionNumber++;
+        let hintText = ''; // ヒント用の変数を初期化
 
-        if (quizType === 'plus') {
-          num1 = Math.floor(Math.random() * 100);
-          num2 = Math.floor(Math.random() * 100);
-          questionText = `${num1} + ${num2} = ?`;
-          currentAnswer = num1 + num2;
-        } else if (quizType === 'minus') {
-          num1 = Math.floor(Math.random() * 100);
-          num2 = Math.floor(Math.random() * 100);
-          if (num1 < num2) {
-            [num1, num2] = [num2, num1];
-          }
-          questionText = `${num1} - ${num2} = ?`;
-          currentAnswer = num1 - num2;
-        } else if (quizType.startsWith('times_')) {
-          const dan = quizType.split('_')[1];
-          if (dan === 'random') {
-            num1 = Math.floor(Math.random() * 9) + 1;
-            num2 = Math.floor(Math.random() * 9) + 1;
-          } else {
-            num1 = parseInt(dan);
-            num2 = Math.floor(Math.random() * 9) + 1;
-          }
-          questionText = `${num1} × ${num2} = ?`;
-          currentAnswer = num1 * num2;
-         
-          // 追加: 掛け算のヒントを生成するロジック
-          let apples = '🍎 ';
-          let hintLine = '';
-          for (let i = 0; i < num1; i++) {
-            hintLine += apples.repeat(num2);
-            hintLine += '<br>';
-          }
-          hintText = `<div class="hint-line"><br>${hintLine}</div>`;
-          
-        } else if (quizType === 'divide') {
-          num2 = Math.floor(Math.random() * 10) + 1;
-          let tempResult = Math.floor(Math.random() * 10) + 1;
-          num1 = num2 * tempResult;
-          questionText = `${num1} ÷ ${num2} = ?`;
-          currentAnswer = tempResult;
-        }
+        if (quizType === 'plus') {
+          num1 = Math.floor(Math.random() * 100);
+          num2 = Math.floor(Math.random() * 100);
+          questionText = `${num1} + ${num2} = ?`;
+          currentAnswer = num1 + num2;
+        } else if (quizType === 'minus') {
+          num1 = Math.floor(Math.random() * 100);
+          num2 = Math.floor(Math.random() * 100);
+          if (num1 < num2) {
+            [num1, num2] = [num2, num1];
+          }
+          questionText = `${num1} - ${num2} = ?`;
+          currentAnswer = num1 - num2;
+        } else if (quizType.startsWith('times_')) {
+          const dan = quizType.split('_')[1];
+          if (dan === 'random') {
+            num1 = Math.floor(Math.random() * 9) + 1;
+            num2 = Math.floor(Math.random() * 9) + 1;
+          } else {
+            num1 = parseInt(dan);
+            num2 = Math.floor(Math.random() * 9) + 1;
+          }
+          questionText = `${num1} × ${num2} = ?`;
+          currentAnswer = num1 * num2;
+          
+          // 掛け算のヒントを生成
+          let hintHtml = '';
+          for (let i = 0; i < num1; i++) {
+            for (let j = 0; j < num2; j++) {
+              hintHtml += '🍎';
+            }
+            hintHtml += ' '; // 各グループの間にスペースを入れる
+          }
+          hintText = `<p class="hint-text">${hintHtml}</p>`;
+        } else if (quizType === 'divide') {
+          num2 = Math.floor(Math.random() * 10) + 1;
+          let tempResult = Math.floor(Math.random() * 10) + 1;
+          num1 = num2 * tempResult;
+          questionText = `${num1} ÷ ${num2} = ?`;
+          currentAnswer = tempResult;
+        }
 
-        quizContainer.innerHTML = `
-          <p>${currentQuestionNumber}問目</p>
-          <p>${questionText}</p>
-          ${hintText}           <input type="number" id="user-answer">
-          <br>
-          <input type="button" onclick="checkAnswer()" value="こたえる">
-          <p id="result"></p>
-        `;
-      }
+        quizContainer.innerHTML = `
+          <p>${currentQuestionNumber}問目</p>
+          <p>${questionText}</p>
+          ${hintText}
+          <input type="number" id="user-answer">
+          <br>
+          <input type="button" onclick="checkAnswer()" value="こたえる">
+          <p id="result"></p>
+        `;
+      }
 
-      function checkAnswer() {
-        const userAnswer = document.getElementById('user-answer').value;
-        const resultParagraph = document.getElementById('result');
+      function checkAnswer() {
+        const userAnswer = document.getElementById('user-answer').value;
+        const resultParagraph = document.getElementById('result');
 
-        if (parseInt(userAnswer, 10) === currentAnswer) {
-          resultParagraph.innerText = 'せいかい！';
-        } else {
-          resultParagraph.innerText = `ざんねん！せいかいは ${currentAnswer} です。`;
-        }
+        if (parseInt(userAnswer, 10) === currentAnswer) {
+          resultParagraph.innerText = 'せいかい！';
+        } else {
+          resultParagraph.innerText = `ざんねん！せいかいは ${currentAnswer} です。`;
+        }
 
-        resultParagraph.innerHTML += `
-          <br>
-          <input type="button" onclick="generateQuestion()" value="次の問題へ">
-          <input type="button" onclick="resetQuiz()" value="メニューに戻る">
-        `;
-      }
+        resultParagraph.innerHTML += `
+          <br>
+          <input type="button" onclick="generateQuestion()" value="次の問題へ">
+          <input type="button" onclick="resetQuiz()" value="メニューに戻る">
+        `;
+      }
 
-      function resetQuiz() {
-        currentQuestionNumber = 0;
-        quizContainer.innerHTML = '';
-        quizMenu.classList.remove('hidden');
-        instruction.classList.remove('hidden');
-      }
-    </script>
-  </body>
+      function resetQuiz() {
+        currentQuestionNumber = 0;
+        quizContainer.innerHTML = '';
+        quizMenu.classList.remove('hidden');
+        instruction.classList.remove('hidden');
+      }
+    </script>
+  </body>
 </html>
